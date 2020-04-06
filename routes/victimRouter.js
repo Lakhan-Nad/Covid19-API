@@ -47,8 +47,9 @@ Router.get("/:vid", async (req, res, next) => {
       for (let i = 0; i < nearData.length; i++) {
         nearCount[nearData[i].status]++;
       }
+      data.nearData = nearCount;
       res.status(200);
-      res.json({ victim: data, nearData: nearCount, status: "OK" });
+      res.json({ data: data, status: "OK" });
     }
   } catch (err) {
     next(err);
@@ -80,7 +81,7 @@ Router.post("/:vid", async (req, res, next) => {
     if (data) {
       res.status(200);
       res.json({
-        victim: data,
+        data: data,
         status: "SUCCESSFULLY_UPDATED",
       });
     }
@@ -117,7 +118,7 @@ Router.post("/", async (req, res, next) => {
     if (data) {
       res.status(201);
       res.json({
-        victim: data,
+        _id: data._id,
         status: "SUCCESSFULLY_INSERTED",
       });
     }
