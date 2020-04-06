@@ -9,6 +9,9 @@ const statusList = require("../utils/StatusData");
 const geoFunction = require("../services/geoData");
 const dateFunc = require("../services/dateFunc");
 
+let change = true;
+let overallCount = {};
+
 Router.param("vid", async (req, res, next, vid) => {
   try {
     let data = await Victim.findById(vid, { _id: 1 });
@@ -60,6 +63,7 @@ Router.get("/:vid", async (req, res, next) => {
 
 Router.post("/:vid", async (req, res, next) => {
   try {
+    change = true;
     delete req.body.coordinates;
     delete req.body.reportedDate;
     let lastStatus = await Victim.findById(req.params.vid, {
@@ -92,6 +96,7 @@ Router.post("/:vid", async (req, res, next) => {
 
 Router.delete("/:vid", async (req, res, next) => {
   try {
+    change = true;
     let result = await Victim.findByIdAndDelete(req.params.vid).lean();
     if (result) {
       res.status(204);
@@ -106,6 +111,7 @@ Router.delete("/:vid", async (req, res, next) => {
 
 Router.post("/", async (req, res, next) => {
   try {
+    change = true;
     delete req.body.reportedDate;
     let data = new Victim(req.body);
     let geoData = await geoFunction(data.place, data.state);
@@ -204,6 +210,12 @@ Router.get("/stats/date", async (req, res, next) => {
           req.query.beginDate.getTime() -
           (req.query.beginDate.getTime() % (24 * 60 * 60 * 1000));
     }
+    if (beginDate > endDate) {
+      res.statusCode(400);
+      res.json({
+        status: "INVALID_REQUEST",
+      });
+    }
     let result = [];
     let data = await Victim.find(
       {
@@ -258,6 +270,12 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
         beginDate =
           req.query.beginDate.getTime() -
           (req.query.beginDate.getTime() % (24 * 60 * 60 * 1000));
+    }
+    if (beginDate > endDate) {
+      res.statusCode(400);
+      res.json({
+        status: "INVALID_REQUEST",
+      });
     }
     let result = [];
     let data = await Victim.find(
@@ -333,6 +351,12 @@ Router.get("/stats/state/cumulative", async (req, res, next) => {
           req.query.beginDate.getTime() -
           (req.query.beginDate.getTime() % (24 * 60 * 60 * 1000));
     }
+    if (beginDate > endDate) {
+      res.statusCode(400);
+      res.json({
+        status: "INVALID_REQUEST",
+      });
+    }
     let result = [];
     let data = await Victim.find(
       {
@@ -366,6 +390,22 @@ Router.get("/stats/state/cumulative", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+Router.get("/stats/total", async (req, res, next) => {
+  try {
+    if (change) {
+      change = false;
+      for (val of statusList) {
+        overallCount[val] = 0;
+      }
+      let data = await Victim.find({}, { status: 1 }).lean();
+      for (let i = 0; i < data.length; i++) {
+        overallCount[data[i].status]++;
+      }
+    }
+    res.json({ count: data });
+  } catch (err) {}
 });
 
 module.exports = Router;
