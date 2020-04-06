@@ -37,7 +37,7 @@ Router.get("/:vid", async (req, res, next) => {
         .where("coordinates")
         .near({
           center: data.coordinates,
-          maxDistance: 1000,
+          maxDistance: 10000,
           spherical: true,
         })
         .lean();
@@ -234,7 +234,7 @@ Router.get("/stats/date", async (req, res, next) => {
     res.status(200);
     res.json({
       data: result,
-      message: result.length > 0 ? "STATISTICS_RETRIEVED" : "NO_DATA_FOUND",
+      status: result.length > 0 ? "OK" : "ZERO_RESULT",
     });
   } catch (err) {
     next(err);
@@ -308,14 +308,14 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
     res.status(200);
     res.json({
       data: result,
-      message: result.length > 0 ? "STATISTICS_RETRIEVED" : "NO_DATA_FOUND",
+      status: result.length > 0 ? "OK" : "ZERO_RESULT",
     });
   } catch (err) {
     next(err);
   }
 });
 
-Router.get("/stats/date/cumulative", async (req, res, next) => {
+Router.get("/stats/state/cumulative", async (req, res, next) => {
   try {
     let beginDate = 0;
     let endDate = Date.now();
@@ -348,7 +348,7 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
     ).lean();
     for (let st of stateList) {
       let obj = {};
-      obj[state] = st;
+      obj.state = st;
       for (val of statusList) {
         obj[val] = 0;
       }
@@ -361,7 +361,7 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
     res.status(200);
     res.json({
       data: result,
-      message: result.length > 0 ? "STATISTICS_RETRIEVED" : "NO_DATA_FOUND",
+      status: result.length > 0 ? "OK" : "ZERO_RESULT",
     });
   } catch (err) {
     next(err);
