@@ -16,25 +16,25 @@ let victimData = {
       country: "India",
       place: "Kolkata",
       from: "2022-12-10",
-      to: "2020-12-30"
+      to: "2020-12-30",
     },
     {
       country: "India",
       place: "Kolkata",
       from: "2022-11-10",
-      to: "2020-11-30"
+      to: "2020-11-30",
     },
     {
       country: "India",
       place: "Kolkata",
       from: "2021-12-10",
-      to: "2021-12-30"
-    }
+      to: "2021-12-30",
+    },
   ],
-  nearbyData: {
+  nearData: {
     active: 5,
     recovered: 4,
-    died: 0
+    died: 0,
   },
   status: "active",
   _id: "5e7c4c7e9b9bec18ec3142de",
@@ -42,16 +42,16 @@ let victimData = {
   testCenter: "Kolkata XYZ hospital",
   createdAt: "2020-03-26T06:32:30.790Z",
   updatedAt: "2020-03-26T06:32:30.790Z",
-  __v: 0
+  __v: 0,
 };
 
 const labelStyle = {
-  fontSize: "1.1em"
+  fontSize: "1.1em",
 };
 
 const dataStyle = {
   fontWeight: "bolder",
-  fontSize: "1.2em"
+  fontSize: "1.2em",
 };
 
 function SingleData({ label, data }) {
@@ -81,7 +81,8 @@ function DisplayTravel({ data, id }) {
   );
 }
 
-function DisplayData({}) {
+function DisplayData({ victimData }) {
+  console.log(victimData);
   return (
     <Segment textAlign="center">
       <Label
@@ -109,11 +110,11 @@ function DisplayData({}) {
             <Header size="medium" content="No recent travel history" />
           )}
           {victimData.travelHistory
-            .map(data => {
+            .map((data) => {
               return {
                 ...data,
                 from: new Date(data.from),
-                to: new Date(data.to)
+                to: new Date(data.to),
               };
             })
             .sort((a, b) => {
@@ -133,7 +134,7 @@ function DisplayData({}) {
             <span
               style={{ color: R_COLOR, fontWeight: "bolder", fontSize: "20px" }}
             >
-              Recovered: {victimData.nearbyData.recovered}
+              Recovered: {victimData.nearData.recovered}
             </span>
           </Grid.Row>
           <br />
@@ -141,7 +142,7 @@ function DisplayData({}) {
             <span
               style={{ color: A_COLOR, fontWeight: "bolder", fontSize: "20px" }}
             >
-              Active: {victimData.nearbyData.active}
+              Active: {victimData.nearData.active}
             </span>
           </Grid.Row>
           <br />
@@ -149,7 +150,7 @@ function DisplayData({}) {
             <span
               style={{ color: D_COLOR, fontWeight: "bolder", fontSize: "20px" }}
             >
-              Died: {victimData.nearbyData.died}
+              Died: {victimData.nearData.died}
             </span>
           </Grid.Row>
         </Grid.Column>

@@ -12,7 +12,7 @@ class VictimForm extends React.Component {
     this.state = {
       submit: true,
       data: null,
-      error: false
+      error: false,
     };
     this.data = {};
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,21 +21,21 @@ class VictimForm extends React.Component {
   handleSubmit() {
     this.setState({ submit: false });
     Client.post("/victim", this.data)
-      .then(res => {
-        if (res.status >= 400) {
-          window.location.href = "data/" + res.data.data;
+      .then((res) => {
+        if (res.status < 400) {
+          window.location.href = "data/" + res.data._id;
         } else {
           throw res.data;
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           submit: true,
           error: true,
           data:
             typeof err === "object" && err.message
               ? err.message + (err.status ? ": " + err.status : "")
-              : JSON.stringify(err)
+              : JSON.stringify(err),
         });
       });
   }

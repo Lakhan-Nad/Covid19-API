@@ -9,31 +9,31 @@ class VictimData extends React.Component {
     this.state = {
       loading: true,
       data: null,
-      error: false
+      error: false,
     };
     this.id = this.props.match.params.id;
   }
 
   componentDidMount() {
     Client.get("/victim/" + this.id)
-      .then(res => {
-        if (res.status >= 400) {
+      .then((res) => {
+        if (res.status < 400) {
           this.setState({
             loading: false,
-            data: res.data
+            data: res.data,
           });
         } else {
           throw res.data;
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
           error: true,
           data:
             typeof err === "object" && err.status
               ? err.status + (err.message ? ": " + err.message : "")
-              : JSON.stringify(err)
+              : JSON.stringify(err),
         });
       });
   }

@@ -22,6 +22,7 @@ const victimSchema = new mongoose.Schema(
     },
     coordinates: {
       type: [Number],
+      default: [0, 0],
       index: "2dsphere",
     },
     occupation: {
@@ -31,6 +32,7 @@ const victimSchema = new mongoose.Schema(
     testCenter: String,
     symptoms: {
       type: [String],
+      default: [],
     },
     travelHistory: [
       {

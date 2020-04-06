@@ -1,14 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const victimRoutes = require("./routes/victimRouter");
-require("dotenv").config();
+const cors = require("cors");
 
 const app = express();
+
+app.use(cors());
 
 mongoose.connect(
   process.env.MONGO_URI,
   { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false },
-  err => {
+  (err) => {
     if (!err) {
       console.log("Connected to db :)");
     } else {
@@ -28,6 +30,7 @@ app.use((req, res, next) => {
 
 // Common Error Handler
 app.use((err, req, res, next) => {
+  console.log(err);
   res.status(err.status || 500);
   res.json(err);
 });

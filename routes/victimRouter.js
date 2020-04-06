@@ -33,8 +33,9 @@ Router.get("/:vid", async (req, res, next) => {
       reportedDate: 0,
     }).lean();
     if (data) {
-      let nearData = await Victim.find({ status: 1, coordinates: 1 })
-        .near("coordinates", {
+      let nearData = await Victim.find()
+        .where("coordinates")
+        .near({
           center: data.coordinates,
           maxDistance: 1000,
           spherical: true,
@@ -47,6 +48,7 @@ Router.get("/:vid", async (req, res, next) => {
       for (let i = 0; i < nearData.length; i++) {
         nearCount[nearData[i].status]++;
       }
+      nearCount[data.status]--;
       data.nearData = nearCount;
       res.status(200);
       res.json({ data: data, status: "OK" });
@@ -71,9 +73,7 @@ Router.post("/:vid", async (req, res, next) => {
       let geoData = await geoFunction(req.body.place, req.body.state);
       req.body.state = geoData.state;
       req.body.place = geoData.place;
-      req.body.coordinates = new Array();
-      req.body.coordinates.push(geoData.lng);
-      req.body.coordinates.push(geoData.lat);
+      req.body.coordinates = [geoData.lng, geoData.lat];
     }
     let data = await Victim.findByIdAndUpdate(req.params.vid, req.body, {
       new: true,
@@ -111,14 +111,12 @@ Router.post("/", async (req, res, next) => {
     let geoData = await geoFunction(data.place, data.state);
     data.state = geoData.state;
     data.place = geoData.place;
-    data.coordinates = new Array();
-    data.coordinates.push(geoData.lng);
-    data.coordinates.push(geoData.lat);
+    data.coordinates = [geoData.lng, geoData.lat];
     await data.save();
     if (data) {
       res.status(201);
       res.json({
-        _id: data._id,
+        _id: String(data._id),
         status: "SUCCESSFULLY_INSERTED",
       });
     }
@@ -133,40 +131,56 @@ Router.get("/", async (req, res, next) => {
     let allStatus = statusList;
     let count = 10,
       page = 1;
-    if (req.query.page && Number(page) == Number(page)) page = req.query.page;
-    if (req.query.count && Number(count) == Number(count))
+    if (req.query.page && Number(req.body.page) == Number(req.body.page))
+      page = req.query.page;
+    if (req.query.count && Number(req.body.count) == Number(req.body.count))
       count = req.query.count;
     if (req.query.state && stateList.includes(req.query.state))
       allState = new Array(req.query.state);
     if (req.query.status && statusList.includes(req.query.status))
       allStatus = new Array(req.query.status);
-    if (!allState && !allStatus) {
-      let data = await Victim.find(
-        {
-          state: { $in: allState },
-          status: { $in: allStatus },
-        },
-        { updatedAt: 1, _id: 1, state: 1, status: 1, age: 1, gender: 1 },
-        {
-          sort: { createdAt: -1 },
-          limit: count,
-          skip: (page - 1 > 0 ? page - 1 : 0) * count,
-        }
-      ).lean();
-      let result = [];
-      for (let i = 0; i < data.length; i++) {
-        result.push({
-          updatedAt: data[i].updatedAt,
-          _id: data[i]._id,
-          state: data[i].state,
-          status: data[i].status,
-          age: data[i].age,
-          gender: data[i].gender,
-        });
+    let totalCount = await Victim.count();
+    let dataCount = await Victim.find(
+      {
+        state: { $in: allState },
+        status: { $in: allStatus },
+      },
+      { _id: 1 }
+    ).count();
+    let data = await Victim.find(
+      {
+        state: { $in: allState },
+        status: { $in: allStatus },
+      },
+      { updatedAt: 1, _id: 1, state: 1, status: 1, age: 1, gender: 1 },
+      {
+        sort: { createdAt: -1 },
+        limit: count,
+        skip: (page - 1 > 0 ? page - 1 : 0) * count,
       }
-      res.status(200);
-      res.json({ data: result, status: "OK" });
+    ).lean();
+    let result = {};
+    result = {
+      totalCount,
+      dataCount,
+      count,
+      page,
+      data: [],
+      status: "",
+    };
+    for (let i = 0; i < data.length; i++) {
+      result.push({
+        updateAt: data[i].updatedAt,
+        _id: String(data[i]._id),
+        state: data[i].state,
+        status: data[i].status,
+        age: data[i].age,
+        gender: data[i].gender,
+      });
     }
+    res.status(200);
+    result.status = data.length > 0 ? "OK" : "ZERO_RESULT";
+    res.json(result);
   } catch (err) {
     next(err);
   }
@@ -323,6 +337,7 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
     let data = await Victim.find(
       {
         reportedDate: {
+          $gte: beginDate,
           $lte: endDate,
         },
       },
@@ -339,7 +354,6 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
       }
       result.push(obj);
     }
-    let indexing = [];
     for (let i = 0; i < data.length; i++) {
       let index = stateList.indexOf(data[i].state);
       result[index][data[i].status]++;

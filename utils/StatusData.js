@@ -1,1 +1,1 @@
-module.exports = ["affected", "recovered", "died"];
+module.exports = ["active", "recovered", "died"];
