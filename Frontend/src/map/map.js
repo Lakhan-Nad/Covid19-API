@@ -30,6 +30,7 @@ const distanceToMouse = (markerPos, mousePos, markerProps) => {
 
 export default class Map extends React.Component {
   constructor(props) {
+    console.log(props);
     super(props);
     this.updateOnChange = this.updateOnChange.bind(this);
     this.onChildClick = this.onChildClick.bind(this);
@@ -43,7 +44,11 @@ export default class Map extends React.Component {
       maxZoom: MAX_ZOOM,
       radius: RADIUS,
     });
-    this.supercluster.load(makeGeoJSONFeature(this.props.data));
+    this.supercluster.load(
+      this.props.data.map((val) => {
+        return makeGeoJSONFeature(val.lng, val.lat, val.status);
+      })
+    );
   }
 
   updateOnChange({ center, zoom, bounds }) {

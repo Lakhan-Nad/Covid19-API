@@ -419,6 +419,7 @@ Router.get("/stats/total", async (req, res, next) => {
 Router.get("/stats/map", async (req, res, next) => {
   try {
     let result = await Victim.aggregate().project({
+      _id: 0,
       status: 1,
       lng: { $arrayElemAt: ["$coordinates", 0] },
       lat: { $arrayElemAt: ["$coordinates", 1] },
