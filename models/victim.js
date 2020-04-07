@@ -8,7 +8,7 @@ const victimSchema = new mongoose.Schema(
     age: Number,
     gender: {
       type: String,
-      enum: ["male", "female", "others"],
+      enum: ["male", "female", "other"],
       default: "others",
     },
     state: {
@@ -58,8 +58,8 @@ const victimSchema = new mongoose.Schema(
       default: "affected",
     },
     reportedDate: {
-      type: Number,
-      default: Date.now() - (Date.now() % (24 * 60 * 60 * 1000)),
+      type: Date,
+      default: Date.now(),
     },
   },
   {

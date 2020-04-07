@@ -26,8 +26,15 @@ class VictimForm extends React.Component {
     this.setState({ submit: false });
     Client.post(url, this.data)
       .then((res) => {
-        if (res.status < 400 && res.data.status === "SUCCESSFULLY_INSERTED") {
-          window.location.href = "data/" + res.data._id;
+        if (
+          res.status < 400 &&
+          ((!this.props.update &&
+            res.data.status === "SUCCESSFULLY_INSERTED") ||
+            res.data.status === "SUCCESSFULLY_UPDATED")
+        ) {
+          window.location.href =
+            "/data/" +
+            ((this.props.update && res.data.data._id) || res.data._id);
         } else {
           throw res.data;
         }

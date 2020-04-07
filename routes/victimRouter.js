@@ -71,7 +71,7 @@ Router.post("/:vid", async (req, res, next) => {
       status: 1,
     });
     if (req.body.status && req.body.status != lastStatus) {
-      req.body.reportedDate = Date.now() - (Date.now() % (24 * 60 * 60 * 1000));
+      req.body.reportedDate = Date.now();
     }
     if (req.body.place || req.body.state) {
       let geoData = await geoFunction(req.body.place, req.body.state);
@@ -100,9 +100,7 @@ Router.delete("/:vid", async (req, res, next) => {
     let result = await Victim.findByIdAndDelete(req.params.vid).lean();
     if (result) {
       res.status(204);
-      res.json({
-        status: "SUCCESSFULLY_DELETED",
-      });
+      res.send();
     }
   } catch (err) {
     next(err);
@@ -194,55 +192,59 @@ Router.get("/", async (req, res, next) => {
 
 Router.get("/stats/date", async (req, res, next) => {
   try {
-    let beginDate = 0;
-    let endDate = Date.now();
+    let allState = stateList;
+    let beginDate = new Date(0);
+    let endDate = new Date(Date.now());
+    if (req.query.state && stateList.includes(req.query.state)) {
+      allState = [req.query.state];
+    }
     if (req.query.endDate) {
       req.query.endDate = new Date(req.query.endDate);
       if (req.query.endDate.getDay() == req.query.endDate.getDay())
-        endDate =
-          req.query.endDate.getTime() -
-          (req.query.endDate.getTime() % (24 * 60 * 60 * 1000));
+        endDate = req.query.endDate;
     }
     if (req.query.beginDate) {
       req.query.beginDate = new Date(req.query.beginDate);
       if (req.query.beginDate.getDay() == req.query.beginDate.getDay())
-        beginDate =
-          req.query.beginDate.getTime() -
-          (req.query.beginDate.getTime() % (24 * 60 * 60 * 1000));
+        beginDate = req.query.beginDate;
     }
-    if (beginDate > endDate) {
-      res.statusCode(400);
-      res.json({
-        status: "INVALID_REQUEST",
-      });
-    }
-    let result = [];
-    let data = await Victim.find(
-      {
+    let result = await Victim.aggregate()
+      .match({
         reportedDate: {
           $gte: beginDate,
           $lte: endDate,
         },
-      },
-      { status: 1, _id: 0, reportedDate: 1 }
-    ).lean();
-    let indexing = [];
-    for (let i = 0; i < data.length; i++) {
-      let index = indexing.indexOf(data[i].reportedDate);
-      if (index > -1) {
-        result[index][data[i].status]++;
-      } else {
-        indexing.push(data[i].reportedDate);
-        index = indexing.length - 1;
-        let value = {};
-        value[date] = dateFunc.formatDate(Date(data[i].reportedDate));
-        for (val of statusList) {
-          value[val] = 0;
-        }
-        value[data[i].status]++;
-        result.push(value);
-      }
-    }
+        state: { $in: allState },
+      })
+      .group({
+        _id: "$reportedDate",
+        active: {
+          $sum: {
+            $cond: { if: { $in: ["$status", ["active"]] }, then: 1, else: 0 },
+          },
+        },
+        recovered: {
+          $sum: {
+            $cond: {
+              if: { $in: ["$status", ["recovered"]] },
+              then: 1,
+              else: 0,
+            },
+          },
+        },
+        died: {
+          $sum: {
+            $cond: { if: { $in: ["$status", ["died"]] }, then: 1, else: 0 },
+          },
+        },
+      })
+      .project({
+        _id: 0,
+        date: "$_id",
+        active: 1,
+        recovered: 1,
+        died: 1,
+      });
     res.status(200);
     res.json({
       data: result,
@@ -255,74 +257,72 @@ Router.get("/stats/date", async (req, res, next) => {
 
 Router.get("/stats/date/cumulative", async (req, res, next) => {
   try {
-    let beginDate = 0;
-    let endDate = Date.now();
+    let allState = stateList;
+    let beginDate = new Date(0);
+    let endDate = new Date(Date.now());
     if (req.query.endDate) {
       req.query.endDate = new Date(req.query.endDate);
       if (req.query.endDate.getDay() == req.query.endDate.getDay())
-        endDate =
-          req.query.endDate.getTime() -
-          (req.query.endDate.getTime() % (24 * 60 * 60 * 1000));
+        endDate = req.query.endDate;
     }
     if (req.query.beginDate) {
       req.query.beginDate = new Date(req.query.beginDate);
       if (req.query.beginDate.getDay() == req.query.beginDate.getDay())
-        beginDate =
-          req.query.beginDate.getTime() -
-          (req.query.beginDate.getTime() % (24 * 60 * 60 * 1000));
+        beginDate = req.query.beginDate;
     }
-    if (beginDate > endDate) {
-      res.statusCode(400);
-      res.json({
-        status: "INVALID_REQUEST",
-      });
+    if (req.query.state && stateList.includes(req.query.state)) {
+      allState = [req.query.state];
     }
-    let result = [];
-    let data = await Victim.find(
-      {
+    let result = await Victim.aggregate()
+      .match({
         reportedDate: {
           $lte: endDate,
         },
-      },
-      { status: 1, _id: 0, reportedDate: 1 },
-      {
-        sort: { reportedDate: 1 },
-      }
-    ).lean();
-    let extra = {};
-    for (val of statusList) {
-      extra[val] = 0;
-    }
-    let indexing = [];
-    for (let i = 0; i < data.length; i++) {
-      let index = indexing.indexOf(data[i].reportedDate);
-      if (index > -1) {
-        result[index][data[i].status]++;
-      } else {
-        if (data[i].reportedDate < beginDate) {
-          extra[date[i].status]++;
-        }
-        indexing.push(data[i].reportedDate);
-        index = indexing.length - 1;
-        let value = {};
-        value[date] = dateFunc.formatDate(Date(data[i].reportedDate));
-        for (val of statusList) {
-          value[val] = 0;
-        }
-        value[data[i].status]++;
-        result.push(value);
-      }
-    }
-    if (result.length > 0) {
-      for (val of statusList) {
-        result[0][val] += extra[val];
-      }
-    }
-    for (let i = 1; i < result.length; i++) {
-      for (val of statusList) {
-        result[i][val] += result[i - 1][val];
-      }
-    }
+        state: { $in: allState },
+      })
+      .sort({ reportedDate: 1 })
+      .group({
+        _id: "$reportedDate",
+        active: {
+          $sum: {
+            $cond: { if: { $in: ["$status", ["active"]] }, then: 1, else: 0 },
+          },
+        },
+        recovered: {
+          $sum: {
+            $cond: {
+              if: { $in: ["$status", ["recovered"]] },
+              then: 1,
+              else: 0,
+            },
+          },
+        },
+        died: {
+          $sum: {
+            $cond: { if: { $in: ["$status", ["died"]] }, then: 1, else: 0 },
+          },
+        },
+      })
+      .group({
+        _id: 0,
+        dates: { $push: "$_id" },
+        atotals: { $push: "$active" },
+        rtotals: { $push: "$recovered" },
+        dtotals: { $push: "$died" },
+      })
+      .unwind({
+        path: "$dates",
+        includeArrayIndex: "index",
+      })
+      .project({
+        date: "$dates",
+        active: { $sum: { $slice: ["$atotals", { $add: ["$index", 1] }] } },
+        recovered: { $sum: { $slice: ["$rtotals", { $add: ["$index", 1] }] } },
+        died: { $sum: { $slice: ["$dtotals", { $add: ["$index", 1] }] } },
+      })
+      .match({
+        date: { $gte: beginDate },
+      });
     res.status(200);
     res.json({
       data: result,
@@ -335,52 +335,60 @@ Router.get("/stats/date/cumulative", async (req, res, next) => {
 
 Router.get("/stats/state/cumulative", async (req, res, next) => {
   try {
-    let beginDate = 0;
-    let endDate = Date.now();
+    let beginDate = new Date(0);
+    let endDate = new Date(Date.now());
     if (req.query.endDate) {
       req.query.endDate = new Date(req.query.endDate);
       if (req.query.endDate.getDay() == req.query.endDate.getDay())
-        endDate =
-          req.query.endDate.getTime() -
-          (req.query.endDate.getTime() % (24 * 60 * 60 * 1000));
+        endDate = req.query.endDate;
     }
     if (req.query.beginDate) {
       req.query.beginDate = new Date(req.query.beginDate);
       if (req.query.beginDate.getDay() == req.query.beginDate.getDay())
-        beginDate =
-          req.query.beginDate.getTime() -
-          (req.query.beginDate.getTime() % (24 * 60 * 60 * 1000));
+        beginDate = req.query.beginDate;
     }
-    if (beginDate > endDate) {
-      res.statusCode(400);
-      res.json({
-        status: "INVALID_REQUEST",
-      });
-    }
-    let result = [];
-    let data = await Victim.find(
-      {
+    let data = await Victim.aggregate()
+      .match({
         reportedDate: {
-          $gte: beginDate,
           $lte: endDate,
         },
-      },
-      { status: 1, _id: 0, state: 1 },
-      {
-        sort: { reportedDate: 1 },
-      }
-    ).lean();
-    for (let st of stateList) {
-      let obj = {};
-      obj.state = st;
-      for (val of statusList) {
-        obj[val] = 0;
-      }
-      result.push(obj);
+      })
+      .group({
+        _id: "$state",
+        active: {
+          $sum: {
+            $cond: { if: { $in: ["$status", ["active"]] }, then: 1, else: 0 },
+          },
+        },
+        recovered: {
+          $sum: {
+            $cond: {
+              if: { $in: ["$status", ["recovered"]] },
+              then: 1,
+              else: 0,
+            },
+          },
+        },
+        died: {
+          $sum: {
+            $cond: { if: { $in: ["$status", ["died"]] }, then: 1, else: 0 },
+          },
+        },
+      });
+    let result = [];
+    for (val of stateList) {
+      let temp = {};
+      temp.state = val;
+      temp.active = 0;
+      temp.recovered = 0;
+      temp.died = 0;
+      result.push(temp);
     }
-    for (let i = 0; i < data.length; i++) {
-      let index = stateList.indexOf(data[i].state);
-      result[index][data[i].status]++;
+    for (x of data) {
+      let index = stateList.indexOf(x._id);
+      result[index].active = x.active;
+      result[index].recovered = x.recovered;
+      result[index].died = x.died;
     }
     res.status(200);
     res.json({
@@ -406,6 +414,22 @@ Router.get("/stats/total", async (req, res, next) => {
     }
     res.json({ data: overallCount, status: "OK" });
   } catch (err) {}
+});
+
+Router.get("/stats/map", async (req, res, next) => {
+  try {
+    let result = await Victim.aggregate().project({
+      status: 1,
+      lng: { $arrayElemAt: ["$coordinates", 0] },
+      lat: { $arrayElemAt: ["$coordinates", 1] },
+    });
+    res.json({
+      data: result,
+      status: data.length > 0 ? "OK" : "ZERO_RESULTS",
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = Router;

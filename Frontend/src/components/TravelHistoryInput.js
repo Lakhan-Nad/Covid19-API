@@ -75,7 +75,7 @@ export default class TravelHistory extends React.Component {
                 callOnUpdate={this.update}
               />
               <InputSimple
-                default={val.place}
+                default={val.from.slice(0, 10)}
                 label="From"
                 type="date"
                 data={val}
@@ -83,7 +83,7 @@ export default class TravelHistory extends React.Component {
                 callOnUpdate={this.update}
               />
               <InputSimple
-                default={val.place}
+                default={val.to.slice(0, 10)}
                 label="To"
                 type="date"
                 data={val}

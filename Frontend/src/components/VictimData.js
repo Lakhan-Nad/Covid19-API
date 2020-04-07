@@ -47,8 +47,13 @@ class VictimData extends React.Component {
     });
     Client.delete("/victim/" + this.props.id)
       .then((res) => {
-        if (res.status < 400 && res.data.status === "SUCCESSFULLY_DELETED")
-          window.location.href = "";
+        if (res.status === 204) {
+          this.setState({
+            delete: false,
+            failed: false,
+          });
+          window.location.href = "/";
+        }
       })
       .catch((err) => {
         this.setState({
@@ -78,7 +83,7 @@ class VictimData extends React.Component {
       );
     } else {
       return this.props.update ? (
-        <VictimForm update default={this.state.data} />
+        <VictimForm update default={this.state.data} id={this.props.id} />
       ) : (
         <>
           <DisplayData victimData={this.state.data} id={this.props.id} />
@@ -86,13 +91,14 @@ class VictimData extends React.Component {
             <Button
               negative
               size="medium"
-              disabled={!this.state.delete}
-              loading={!this.state.delete}
+              disabled={this.state.delete}
+              loading={this.state.delete}
               content={
-                this.state.failed
+                !this.state.failed
                   ? "Delete this record"
                   : "Delete failed, Retry"
               }
+              onClick={this.handleDelete}
             />
           </div>
         </>

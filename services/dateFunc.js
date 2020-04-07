@@ -1,4 +1,5 @@
-formatDate = (date) => {
+formatDate = (dateNum) => {
+  let date = new Date(dateNum);
   let month = "" + (date.getMonth() + 1),
     day = "" + date.getDate(),
     year = date.getFullYear();
@@ -28,4 +29,11 @@ yersterday = (date) => {
 today = () => {
   let today = new Date(Date.now());
   return formatDate(today);
+};
+
+module.exports = {
+  today,
+  tommorow,
+  yersterday,
+  formatDate,
 };

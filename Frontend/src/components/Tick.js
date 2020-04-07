@@ -24,7 +24,7 @@ export default class Tick extends React.Component {
   }
 
   update() {
-    Client.get("/stats/total").then((res) => {
+    Client.get("/victim/stats/total").then((res) => {
       if (res.status < 400 && res.data.status === "OK") {
         this.setState({
           timeout: setTimeout(this.update, 3000),

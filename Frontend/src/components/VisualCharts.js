@@ -46,11 +46,11 @@ export default class VisualCharts extends React.Component {
     let from = this.data.from;
     let to = this.data.to;
     let state = this.data.state;
-    let url = "/stats/date";
+    let url = "/victim/stats/date";
     if (this.props.cumulative) {
       url += "/cumulative";
     } else if (this.props.state) {
-      url = "/stats/date/cumulative";
+      url = "/victim/stats/state/cumulative";
     }
     let params = {};
     if (from !== "") {
@@ -59,7 +59,7 @@ export default class VisualCharts extends React.Component {
     if (to !== "") {
       params.endDate = to;
     }
-    if (this.props.state && state !== "") {
+    if (!this.props.state && state !== "") {
       params.state = state;
     }
     Client.get(url, {
@@ -180,9 +180,11 @@ export default class VisualCharts extends React.Component {
                 "New Cases from " +
                 (this.state.from === ""
                   ? "..."
-                  : localDateString(this.state.from)) +
+                  : localDateString(new Date(this.state.from))) +
                 " - " +
-                (this.state.to === "" ? "..." : localDateString(this.state.to))
+                (this.state.to === ""
+                  ? "..."
+                  : localDateString(new Date(this.state.to)))
               }
             />
           ) : this.props.cumulative ? (
