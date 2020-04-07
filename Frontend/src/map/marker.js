@@ -20,7 +20,7 @@ function Marker({ properties, key, $hover }) {
           background:
             properties.status === CONSTANTS.MIXED
               ? CONSTANTS.M_COLOR
-              : CONSTANTS.selectColor(properties.status)
+              : CONSTANTS.selectColor(properties.status),
         }}
       >
         <span>{properties.count}</span>
@@ -36,7 +36,7 @@ function Marker({ properties, key, $hover }) {
             width: "8em",
             background: "#fff",
             fontSize: "17px",
-            transform: "translateX(-38%) translateY(12%)"
+            transform: "translateX(-38%) translateY(12%)",
           }}
         >
           <span
@@ -49,7 +49,7 @@ function Marker({ properties, key, $hover }) {
               top: "0",
               transformOrigin: "100% 100%",
               transform: "translateY(-37%) translateX(-100%) rotate(45deg)",
-              background: "#fff"
+              background: "#fff",
             }}
           />
           <span style={{ fontWeight: "bold", color: CONSTANTS.R_COLOR }}>

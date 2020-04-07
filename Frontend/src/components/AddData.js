@@ -19,10 +19,14 @@ class VictimForm extends React.Component {
   }
 
   handleSubmit() {
+    let url = "/victim";
+    if (this.props.update) {
+      url += "/" + this.props.id;
+    }
     this.setState({ submit: false });
-    Client.post("/victim", this.data)
+    Client.post(url, this.data)
       .then((res) => {
-        if (res.status < 400) {
+        if (res.status < 400 && res.data.status === "SUCCESSFULLY_INSERTED") {
           window.location.href = "data/" + res.data._id;
         } else {
           throw res.data;
@@ -49,7 +53,7 @@ class VictimForm extends React.Component {
             <SelectSimple
               placeholder="Status"
               label="Status"
-              default=""
+              default={this.props.update ? this.props.default.status : ""}
               name="status"
               data={this.data}
               options={status}
@@ -60,7 +64,7 @@ class VictimForm extends React.Component {
               type="number"
               placeholder="Age"
               label="Age"
-              default=""
+              default={this.props.update ? this.props.default.age : ""}
               data={this.data}
               name="age"
               min="0"
@@ -70,7 +74,7 @@ class VictimForm extends React.Component {
             <SelectSimple
               placeholder="Gender"
               label="Gender"
-              default=""
+              default={this.props.update ? this.props.default.gender : ""}
               data={this.data}
               name="gender"
               options={genderList}
@@ -81,7 +85,7 @@ class VictimForm extends React.Component {
               type="text"
               placeholder="Place"
               label="Place"
-              default=""
+              default={this.props.update ? this.props.default.place : ""}
               data={this.data}
               name="place"
             />
@@ -90,7 +94,7 @@ class VictimForm extends React.Component {
             <SelectSimple
               placeholder="State"
               label="State"
-              default=""
+              default={this.props.update ? this.props.default.state : ""}
               data={this.data}
               name="state"
               options={stateOptions}
@@ -101,7 +105,7 @@ class VictimForm extends React.Component {
               type="text"
               placeholder="Occupation"
               label="Occupation"
-              default=""
+              default={this.props.update ? this.props.default.occupation : ""}
               data={this.data}
               name="occupation"
             />
@@ -111,7 +115,7 @@ class VictimForm extends React.Component {
               type="text"
               placeholder="Test Center"
               label="Test Center"
-              default=""
+              default={this.props.update ? this.props.default.testCenter : ""}
               data={this.data}
               name="testCenter"
             />
@@ -120,7 +124,7 @@ class VictimForm extends React.Component {
             <SelectWithAddition
               placeholder="Symptoms"
               label="Symptoms"
-              default=""
+              default={this.props.update ? this.props.default.symptoms : ""}
               name="symptoms"
               data={this.data}
               options={commonSymptoms}
@@ -128,7 +132,13 @@ class VictimForm extends React.Component {
             />
           </Grid.Column>
           <Grid.Column width="8" textAlign="left">
-            <TravelHistory default={[]} name="travelHistory" data={this.data} />
+            <TravelHistory
+              default={
+                this.props.update ? this.props.default.travelHistory : []
+              }
+              name="travelHistory"
+              data={this.data}
+            />
           </Grid.Column>
           <Grid.Column textAlign="center" width="16">
             <Button

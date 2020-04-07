@@ -3,54 +3,98 @@ import {
   Route,
   Switch,
   NavLink,
-  BrowserRouter as Router
+  BrowserRouter as Router,
 } from "react-router-dom";
 import NotFound from "./components/NotFound";
-import { Container, Menu } from "semantic-ui-react";
+import { Container, Menu, Dropdown } from "semantic-ui-react";
 import VictimData from "./components/VictimData";
-import DisplayData from "./components/DisplayData";
 import VictimForm from "./components/AddData";
+import Tick from "./components/Tick";
+import VisualCharts from "./components/VisualCharts";
 
 const activeStyle = {
   fontWeight: "bold",
-  borderBottom: "2px solid currentcolor"
+  borderBottom: "2px solid currentcolor",
 };
 
 function App() {
   return (
-    <Container>
-      <Router>
-        <Container>
-          <Menu borderless size="massive" secondary color="black">
-            <Menu.Item>
-              <NavLink to="/stats" activeStyle={activeStyle}>
-                Statistics
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item>
-              <NavLink to="/add" activeStyle={activeStyle}>
-                Add Data
-              </NavLink>
-            </Menu.Item>
-          </Menu>
-        </Container>
+    <Router>
+      <Container>
+        <Menu
+          borderless
+          size="massive"
+          secondary
+          color="black"
+          style={{ marginBottom: "0" }}
+        >
+          <Menu.Item>
+            <NavLink to="/" activeStyle={activeStyle} exact>
+              Statistics
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item>
+            <NavLink to="/add" activeStyle={activeStyle}>
+              Add Data
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item vertical>
+            <Dropdown item text="Visualization" basic>
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                  <NavLink to="/date">Datewise new cases</NavLink>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <NavLink to="/datecumulative">Datewise total cases</NavLink>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <NavLink to="/state">Statewise new cases</NavLink>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Item>
+        </Menu>
         <Switch>
           <Route
             path="/data/:id"
-            render={props => <VictimData {...props} />}
+            render={(props) => (
+              <VictimData
+                id={props.match.params.id}
+                key={"data-" + props.match.params.id}
+              />
+            )}
           ></Route>
-          <Route path="/stats">
-            <DisplayData />
-          </Route>
+          <Route
+            path="/update/:id"
+            render={(props) => (
+              <VictimData
+                id={props.match.params.id}
+                update
+                key={"update-" + props.match.params.id}
+              />
+            )}
+          ></Route>
           <Route path="/add">
             <VictimForm />
+          </Route>
+          <Route path="/date">
+            <VisualCharts key="datewise" />
+          </Route>
+          <Route path="/datecumulative">
+            <VisualCharts cumulative key="datewisecumulative" />
+          </Route>
+          <Route path="/state">
+            <VisualCharts state key="statewise" />
+          </Route>
+          <Route path="/" exact>
+            <Tick />
           </Route>
           <Route path="*">
             <NotFound />
           </Route>
         </Switch>
-      </Router>
-    </Container>
+      </Container>
+    </Router>
   );
 }
 

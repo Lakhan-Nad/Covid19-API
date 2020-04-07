@@ -9,7 +9,7 @@ export default class FormContainer extends React.Component {
   fn(child) {
     return React.cloneElement(child, {
       data: this.props.data,
-      callOnUpdate: this.props.callOnUpdate
+      callOnUpdate: this.props.callOnUpdate,
     });
   }
   render() {
@@ -22,7 +22,7 @@ export class InputSimple extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.default
+      value: this.props.default,
     };
     this.subprops = { ...this.props };
     delete this.subprops.default;
@@ -52,7 +52,7 @@ export class SelectSimple extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.default
+      value: this.props.default,
     };
     this.subprops = { ...this.props };
     delete this.subprops.default;
@@ -95,7 +95,7 @@ export class SelectWithAddition extends React.Component {
     super(props);
     this.state = {
       value: this.props.default,
-      options: this.props.options
+      options: this.props.options,
     };
     this.subprops = { ...this.props };
     delete this.subprops.default;
@@ -111,8 +111,8 @@ export class SelectWithAddition extends React.Component {
     this.setState({
       options: [
         ...this.state.options,
-        { key: value, value: value, text: value }
-      ]
+        { key: value, value: value, text: value },
+      ],
     });
   }
   updateState(ev, { value }) {

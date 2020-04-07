@@ -7,99 +7,124 @@ export const chartLineOptions = {
       dateFormatter: {
         year: "yyyy",
         month: "MMM yy",
-        day: "dd MMM"
-      }
-    }
+        day: "dd MMM",
+      },
+    },
+    title: {
+      text: "",
+      style: {
+        fontSize: "24px",
+        fontWeight: "900",
+      },
+    },
   },
   legend: {
     show: true,
-    position: "bottom",
+    position: "top",
     horizontalAlign: "center",
     onItemHover: {
-      highlightDataSeries: true
+      highlightDataSeries: true,
     },
     fontSize: "18px",
     fontWeight: "700",
+    offsetY: 20,
+    itemMargin: {
+      horizontal: 20,
+    },
     markers: {
-      height: 20,
-      width: 20
-    }
+      height: 15,
+      width: 15,
+    },
   },
   stroke: {
-    curve: "smooth"
+    curve: "smooth",
   },
   tooltip: {
     onDatasetHover: {
-      highlightDataSeries: true
+      highlightDataSeries: true,
     },
     fixed: {
       enabled: true,
       position: "topLeft",
       offsetX: 80,
-      offsetY: 30
-    }
+      offsetY: 30,
+    },
   },
-  colors: [R_COLOR, A_COLOR, D_COLOR],
+  colors: [D_COLOR, R_COLOR, A_COLOR],
   chart: {
-    type: "area",
+    type: "line",
     toolbar: {
       tools: {
         selection: false,
-        zoom: false
+        zoom: false,
       },
-      autoSelected: "pan"
-    }
+      autoSelected: "pan",
+    },
   },
   yaxis: {
     title: {
-      text: "Covid-19 Cases",
+      text: "Covid-19 Total Cases",
       style: {
-        fontSize: "20px"
-      }
+        fontSize: "20px",
+      },
     },
-    tickAmount: 9
-  }
+    tickAmount: 9,
+  },
 };
 
 export const chartBarOptions = {
   xaxis: {
     type: "category",
     labels: {
-      show: true
+      show: true,
     },
     title: {
-      text: "States and Union Territories",
+      text: "",
       style: {
         fontSize: "16px",
-        fontWeight: "600"
-      }
+        fontWeight: "600",
+      },
     },
-    tickAmount: 8
+    tickAmount: 8,
   },
   tooltip: {
-    followCursor: true
+    followCursor: true,
   },
-  colors: [R_COLOR, A_COLOR, D_COLOR],
+  colors: [D_COLOR, R_COLOR, A_COLOR],
   chart: {
     type: "bar",
     stacked: true,
     toolbar: {
-      show: false
-    }
+      show: false,
+    },
   },
   yaxis: {
     labels: {
       style: {
         fontSize: "14px",
-        fontWeight: "700"
+        fontWeight: "700",
       },
-      maxWidth: 200
-    }
+      maxWidth: 200,
+    },
+    title: {
+      text: "Indian States and Union Territories",
+      offsetX: -35,
+      style: {
+        fontSize: "20px",
+        fontWeight: "700",
+      },
+    },
   },
   legend: {
     show: true,
     position: "top",
-    horizontalAlign: "right"
+    horizontalAlign: "right",
+    fontSize: "22px",
+    fontWeight: "900",
+    offsetY: 20,
+    itemMargin: {
+      horizontal: 10,
+    },
   },
   grid: {
     show: true,
@@ -108,85 +133,92 @@ export const chartBarOptions = {
     position: "back",
     yaxis: {
       lines: {
-        show: true
-      }
-    }
+        show: true,
+      },
+    },
   },
   plotOptions: {
     bar: {
-      horizontal: true
-    }
-  }
+      horizontal: true,
+    },
+  },
 };
 
 export const chartAreaOptions = {
   xaxis: {
     type: "datetime",
     labels: {
-      show: false
+      show: true,
+      dateFormatter: {
+        year: "yyyy",
+        month: "MMM yy",
+        day: "dd MMM",
+      },
     },
     title: {
-      text: "Time",
+      text: "",
       style: {
         fontSize: "20px",
-        fontWeight: "700"
-      }
-    }
+        fontWeight: "700",
+      },
+    },
   },
   legend: {
     show: true,
     position: "top",
-    horizontalAlign: "left",
+    horizontalAlign: "right",
     onItemHover: {
-      highlightDataSeries: true
+      highlightDataSeries: true,
     },
     onItemClick: {
-      toggleDataSeries: false
+      toggleDataSeries: false,
     },
-    fontSize: "18px",
+    fontSize: "22px",
+    fontWeight: "900",
+    offsetY: 30,
+    offsetX: 20,
     itemMargin: {
-      horizontal: 10
-    }
+      horizontal: 10,
+    },
   },
   stroke: {
     curve: "smooth",
-    lineCap: "round"
+    lineCap: "round",
   },
   dataLabels: {
-    enabled: false
+    enabled: false,
   },
   tooltip: {
     onDatasetHover: {
-      highlightDataSeries: true
+      highlightDataSeries: true,
     },
-    followCursor: true
+    followCursor: true,
   },
-  colors: [R_COLOR, A_COLOR, D_COLOR],
+  colors: [D_COLOR, R_COLOR, A_COLOR],
   chart: {
     type: "area",
-    stacked: true,
     toolbar: {
       tools: {
-        zoom: false
+        zoom: false,
       },
-      autoSelected: "pan"
-    }
+      autoSelected: "pan",
+    },
   },
   yaxis: {
     title: {
-      text: "Covid-19 Growth",
+      text: "Covid-19 New Cases",
       style: {
-        fontSize: "18px"
-      }
+        fontSize: "18px",
+      },
     },
-    tickAmount: 5
+    tickAmount: 5,
   },
   fill: {
     type: "gradient",
     gradient: {
       opacityFrom: 0.6,
-      opacityTo: 0.9
-    }
+      opacityTo: 0.9,
+    },
   },
   grid: {
     show: true,
@@ -195,8 +227,8 @@ export const chartAreaOptions = {
     position: "back",
     yaxis: {
       lines: {
-        show: true
-      }
-    }
-  }
+        show: true,
+      },
+    },
+  },
 };

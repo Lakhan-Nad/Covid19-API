@@ -404,7 +404,7 @@ Router.get("/stats/total", async (req, res, next) => {
         overallCount[data[i].status]++;
       }
     }
-    res.json({ count: data });
+    res.json({ data: overallCount, status: "OK" });
   } catch (err) {}
 });
 

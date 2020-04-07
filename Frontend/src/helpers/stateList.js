@@ -34,7 +34,7 @@ const stateList = [
   "Tripura",
   "Uttar Pradesh",
   "Uttarakhand",
-  "West Bengal"
+  "West Bengal",
 ];
 
 export default stateList;

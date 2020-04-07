@@ -60,12 +60,12 @@ const data = [
   [3, 1, 3],
   [17, 8, 4],
   [17, 7, 1],
-  [1, 4, 1]
+  [1, 4, 1],
 ];
 
 const startDate = new Date("2020/02/27");
 
-const Data = [];
+export const Data = [];
 
 for (let i = 0; i < data.length; i++) {
   let curDate = new Date(startDate.getTime() + i * 60 * 60 * 24 * 1000)
@@ -75,11 +75,9 @@ for (let i = 0; i < data.length; i++) {
     date: curDate,
     active: data[i][0],
     recovered: data[i][1],
-    died: data[i][2]
+    died: data[i][2],
   });
 }
-
-export default Data;
 
 export const stateData = [];
 
@@ -88,6 +86,6 @@ for (let i = 0; i < data.length && i < stateList.length; i++) {
     state: stateList[i],
     active: data[i][0],
     recovered: data[i][1],
-    died: data[i][2]
+    died: data[i][2],
   });
 }

@@ -6,7 +6,7 @@ export default class TravelHistory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.default
+      value: this.props.default,
     };
     this.value = JSON.parse(JSON.stringify(this.props.default));
     this.add = this.add.bind(this);
@@ -19,7 +19,7 @@ export default class TravelHistory extends React.Component {
     if (typeof this.props.callOnUpdate === "function")
       this.props.callOnUpdate();
     this.setState({
-      value: this.value
+      value: this.value,
     });
   }
 

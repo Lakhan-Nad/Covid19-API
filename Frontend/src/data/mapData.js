@@ -296,7 +296,7 @@ const LatLngData = [
   [25.133699, 82.56443],
   [11.519588, 79.325157],
   [28.128876, 75.399506],
-  [25.454794, 78.133957]
+  [25.454794, 78.133957],
 ];
 
 const Data = [];
@@ -310,7 +310,7 @@ for (let i = 0; i < LatLngData.length; i++) {
   Data.push({
     lat: LatLngData[i][0],
     lng: LatLngData[i][1],
-    status: statusArray[Math.round(Math.random() * 3) % 3]
+    status: statusArray[Math.round(Math.random() * 3) % 3],
   });
 }
 

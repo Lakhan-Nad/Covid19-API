@@ -1,7 +1,8 @@
 import React from "react";
 import Client from "../helpers/client";
-import { Message, Icon } from "semantic-ui-react";
+import { Message, Icon, Button } from "semantic-ui-react";
 import DisplayData from "./DisplayData";
+import VictimForm from "./AddData";
 
 class VictimData extends React.Component {
   constructor(props) {
@@ -10,17 +11,19 @@ class VictimData extends React.Component {
       loading: true,
       data: null,
       error: false,
+      delete: false,
+      failed: false,
     };
-    this.id = this.props.match.params.id;
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
-    Client.get("/victim/" + this.id)
+    Client.get("/victim/" + this.props.id)
       .then((res) => {
-        if (res.status < 400) {
+        if (res.status < 400 && res.data.status === "OK") {
           this.setState({
             loading: false,
-            data: res.data,
+            data: res.data.data,
           });
         } else {
           throw res.data;
@@ -34,6 +37,23 @@ class VictimData extends React.Component {
             typeof err === "object" && err.status
               ? err.status + (err.message ? ": " + err.message : "")
               : JSON.stringify(err),
+        });
+      });
+  }
+
+  handleDelete() {
+    this.setState({
+      delete: true,
+    });
+    Client.delete("/victim/" + this.props.id)
+      .then((res) => {
+        if (res.status < 400 && res.data.status === "SUCCESSFULLY_DELETED")
+          window.location.href = "";
+      })
+      .catch((err) => {
+        this.setState({
+          delete: false,
+          failed: true,
         });
       });
   }
@@ -57,7 +77,26 @@ class VictimData extends React.Component {
         />
       );
     } else {
-      return <DisplayData victimData={this.state.data.data} />;
+      return this.props.update ? (
+        <VictimForm update default={this.state.data} />
+      ) : (
+        <>
+          <DisplayData victimData={this.state.data} id={this.props.id} />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              negative
+              size="medium"
+              disabled={!this.state.delete}
+              loading={!this.state.delete}
+              content={
+                this.state.failed
+                  ? "Delete this record"
+                  : "Delete failed, Retry"
+              }
+            />
+          </div>
+        </>
+      );
     }
   }
 }

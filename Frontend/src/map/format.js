@@ -11,7 +11,7 @@ export function makeGeoJSONFeature(lng, lat, status) {
     type: "Feature",
     geometry: {
       type: "Point",
-      coordinates: [lng, lat]
+      coordinates: [lng, lat],
     },
     properties: {
       status: status,
@@ -19,8 +19,8 @@ export function makeGeoJSONFeature(lng, lat, status) {
       cluster: false,
       recovered: status === RECOVERED ? 1 : 0,
       active: status === ACTIVE ? 1 : 0,
-      died: status === DIED ? 1 : 0
-    }
+      died: status === DIED ? 1 : 0,
+    },
   };
 }
 

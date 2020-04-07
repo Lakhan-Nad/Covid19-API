@@ -4,47 +4,6 @@ import { selectColor } from "../helpers/constant";
 import { localDateString, localDateTimeString } from "../helpers/date";
 import { A_COLOR, R_COLOR, D_COLOR } from "../helpers/constant";
 
-let victimData = {
-  gender: "male",
-  state: "West Bengal",
-  place: "Kolkata",
-  occupation: "Doctor",
-  symptoms: ["Fever", "Headache"],
-  coordinates: [12.312323, 65.3424242],
-  travelHistory: [
-    {
-      country: "India",
-      place: "Kolkata",
-      from: "2022-12-10",
-      to: "2020-12-30",
-    },
-    {
-      country: "India",
-      place: "Kolkata",
-      from: "2022-11-10",
-      to: "2020-11-30",
-    },
-    {
-      country: "India",
-      place: "Kolkata",
-      from: "2021-12-10",
-      to: "2021-12-30",
-    },
-  ],
-  nearData: {
-    active: 5,
-    recovered: 4,
-    died: 0,
-  },
-  status: "active",
-  _id: "5e7c4c7e9b9bec18ec3142de",
-  age: 56,
-  testCenter: "Kolkata XYZ hospital",
-  createdAt: "2020-03-26T06:32:30.790Z",
-  updatedAt: "2020-03-26T06:32:30.790Z",
-  __v: 0,
-};
-
 const labelStyle = {
   fontSize: "1.1em",
 };
@@ -127,7 +86,7 @@ function DisplayData({ victimData }) {
         <Grid.Column width="4">
           <Header
             size="medium"
-            content="Cases within radius of 1 km"
+            content="Cases within radius of 10 km"
             dividing
           />
           <Grid.Row textAlign="center">

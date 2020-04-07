@@ -36,12 +36,12 @@ export default class Map extends React.Component {
     this.state = {
       center: [INDIA_LAT, INDIA_LOT],
       zoom: DEFAULT_ZOOM,
-      bounds: [-180, -85, 180, 85]
+      bounds: [-180, -85, 180, 85],
     };
     this.supercluster = new Supercluster({
       reduce: reduceClusters,
       maxZoom: MAX_ZOOM,
-      radius: RADIUS
+      radius: RADIUS,
     });
     this.supercluster.load(this.props.data);
   }
@@ -50,7 +50,7 @@ export default class Map extends React.Component {
     this.setState({
       bounds: [bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat],
       center: center,
-      zoom: zoom
+      zoom: zoom,
     });
   }
 
@@ -58,7 +58,7 @@ export default class Map extends React.Component {
     if (props.properties.cluster) {
       this.setState({
         center: [props.lat, props.lng],
-        zoom: this.state.zoom + 1
+        zoom: this.state.zoom + 1,
       });
     }
   }
