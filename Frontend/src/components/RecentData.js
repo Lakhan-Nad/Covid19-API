@@ -90,14 +90,16 @@ export default class RecentData extends React.Component {
             default=""
             data={this.data}
             clearable
+            callOnUpdate={this.updateData}
           />
           <SelectSimple
             options={status}
-            label="Select State"
-            name="state"
+            label="Select Status"
+            name="status"
             default=""
             data={this.data}
             clearable
+            callOnUpdate={this.updateData}
           />
           <Pagination
             boundaryRange={0}

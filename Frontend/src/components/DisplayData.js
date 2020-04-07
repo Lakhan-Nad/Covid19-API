@@ -85,7 +85,7 @@ function DisplayData({ victimData }) {
         <Grid.Column width="4">
           <Header
             size="medium"
-            content="Cases within radius of 10 km"
+            content="Cases within radius of 50 km"
             dividing
           />
           <Grid.Row textAlign="center">

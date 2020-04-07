@@ -15,11 +15,11 @@ export default function DataTable({ data }) {
       <Table.Cell>{data.state}</Table.Cell>
       <Table.Cell>{localDateTimeString(new Date(data.updatedAt))}</Table.Cell>
       <Table.Cell>
-        <Link to={"/data" + data._id} title="View">
+        <Link to={"/data/" + data._id} title="View">
           View
         </Link>
-        /
-        <Link to={"/update" + data._id} title="Update">
+        {" / "}
+        <Link to={"/update/" + data._id} title="Update">
           Update
         </Link>
       </Table.Cell>

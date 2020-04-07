@@ -35,14 +35,16 @@ Router.get("/:vid", async (req, res, next) => {
       reportedDate: 0,
     }).lean();
     if (data) {
-      let nearData = await Victim.find()
-        .where("coordinates")
-        .near({
-          center: data.coordinates,
-          maxDistance: 10000,
-          spherical: true,
-        })
-        .lean();
+      let nearData = await Victim.find({
+        coordinates: {
+          $near: {
+            $maxDistance: 50000,
+            $geometry: {
+              coordinates: data.coordinates,
+            },
+          },
+        },
+      });
       nearCount = {};
       for (let val of statusList) {
         nearCount[val] = 0;
@@ -142,14 +144,14 @@ Router.get("/", async (req, res, next) => {
       allState = new Array(req.query.state);
     if (req.query.status && statusList.includes(req.query.status))
       allStatus = new Array(req.query.status);
-    let totalCount = await Victim.count();
+    let totalCount = await Victim.countDocuments();
     let dataCount = await Victim.find(
       {
         state: { $in: allState },
         status: { $in: allStatus },
       },
       { _id: 1 }
-    ).count();
+    ).countDocuments();
     let data = await Victim.find(
       {
         state: { $in: allState },
