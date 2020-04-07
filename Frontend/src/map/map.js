@@ -2,7 +2,7 @@ import React from "react";
 import GoogleMapReact from "google-map-react";
 import Supercluster from "supercluster";
 
-import { reduceClusters } from "./format";
+import { reduceClusters, makeGeoJSONFeature } from "./format";
 import Marker from "./marker";
 import { Container } from "semantic-ui-react";
 
@@ -43,7 +43,7 @@ export default class Map extends React.Component {
       maxZoom: MAX_ZOOM,
       radius: RADIUS,
     });
-    this.supercluster.load(this.props.data);
+    this.supercluster.load(makeGeoJSONFeature(this.props.data));
   }
 
   updateOnChange({ center, zoom, bounds }) {

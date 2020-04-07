@@ -3,6 +3,7 @@ import Client from "../helpers/client";
 import { Message, Icon, Button } from "semantic-ui-react";
 import DisplayData from "./DisplayData";
 import VictimForm from "./AddData";
+import errorText from "../helpers/error";
 
 class VictimData extends React.Component {
   constructor(props) {
@@ -33,10 +34,7 @@ class VictimData extends React.Component {
         this.setState({
           loading: false,
           error: true,
-          data:
-            typeof err === "object" && err.status
-              ? err.status + (err.message ? ": " + err.message : "")
-              : JSON.stringify(err),
+          data: errorText(err),
         });
       });
   }

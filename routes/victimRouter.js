@@ -425,7 +425,7 @@ Router.get("/stats/map", async (req, res, next) => {
     });
     res.json({
       data: result,
-      status: data.length > 0 ? "OK" : "ZERO_RESULTS",
+      status: "OK",
     });
   } catch (err) {
     next(err);

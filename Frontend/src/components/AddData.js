@@ -5,6 +5,7 @@ import { InputSimple, SelectWithAddition, SelectSimple } from "./input";
 import { commonSymptoms, genderList, status } from "../helpers/options";
 import { stateOptions } from "../helpers/stateList";
 import TravelHistory from "./TravelHistoryInput";
+import errorText from "../helpers/error";
 
 class VictimForm extends React.Component {
   constructor(props) {
@@ -43,10 +44,7 @@ class VictimForm extends React.Component {
         this.setState({
           submit: true,
           error: true,
-          data:
-            typeof err === "object" && err.message
-              ? err.message + (err.status ? ": " + err.status : "")
-              : JSON.stringify(err),
+          data: errorText(err),
         });
       });
   }

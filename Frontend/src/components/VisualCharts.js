@@ -13,6 +13,7 @@ import { LineChart, AreaChart, BarChart } from "../charts/chart";
 import { SelectSimple, InputSimple } from "./input";
 import { stateOptions } from "../helpers/stateList";
 import { localDateString } from "../helpers/date";
+import errorText from "../helpers/error";
 
 export default class VisualCharts extends React.Component {
   constructor(props) {
@@ -83,10 +84,7 @@ export default class VisualCharts extends React.Component {
       .catch((err) => {
         this.setState({
           loading: false,
-          error:
-            typeof err === "object" && err.status
-              ? err.status + (err.message ? ": " + err.message : "")
-              : JSON.stringify(err),
+          error: errorText(err),
         });
       });
   }

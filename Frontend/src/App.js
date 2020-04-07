@@ -11,6 +11,7 @@ import VictimData from "./components/VictimData";
 import VictimForm from "./components/AddData";
 import Tick from "./components/Tick";
 import VisualCharts from "./components/VisualCharts";
+import MapData from "./components/MapData";
 
 const activeStyle = {
   fontWeight: "bold",
@@ -38,7 +39,12 @@ function App() {
               Add Data
             </NavLink>
           </Menu.Item>
-          <Menu.Item vertical>
+          <Menu.Item>
+            <NavLink to="/map" activeStyle={activeStyle}>
+              Covid-19 Map
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item>
             <Dropdown item text="Visualization" basic>
               <Dropdown.Menu>
                 <Dropdown.Item>
@@ -85,6 +91,9 @@ function App() {
           </Route>
           <Route path="/state">
             <VisualCharts state key="statewise" />
+          </Route>
+          <Route path="/map">
+            <MapData />
           </Route>
           <Route path="/" exact>
             <Tick />
