@@ -7,7 +7,6 @@ const stateList = require("../utils/StateData");
 const statusList = require("../utils/StatusData");
 
 const geoFunction = require("../services/geoData");
-const dateFunc = require("../services/dateFunc");
 
 let change = true;
 let overallCount = {};
@@ -156,15 +155,14 @@ Router.get("/", async (req, res, next) => {
         state: { $in: allState },
         status: { $in: allStatus },
       },
-      { updatedAt: 1, _id: 1, state: 1, status: 1, age: 1, gender: 1 },
+      { updatedAt: 1, _id: 1, state: 1, status: 1 },
       {
         sort: { createdAt: -1 },
         limit: count,
         skip: (page - 1 > 0 ? page - 1 : 0) * count,
       }
     ).lean();
-    let result = {};
-    result = {
+    let result = {
       totalCount,
       dataCount,
       count,
@@ -173,13 +171,11 @@ Router.get("/", async (req, res, next) => {
       status: "",
     };
     for (let i = 0; i < data.length; i++) {
-      result.push({
+      result.data.push({
         updateAt: data[i].updatedAt,
         _id: String(data[i]._id),
         state: data[i].state,
         status: data[i].status,
-        age: data[i].age,
-        gender: data[i].gender,
       });
     }
     res.status(200);

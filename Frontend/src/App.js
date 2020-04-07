@@ -6,12 +6,13 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 import NotFound from "./components/NotFound";
-import { Container, Menu, Dropdown } from "semantic-ui-react";
+import { Container, Menu, Dropdown, Header } from "semantic-ui-react";
 import VictimData from "./components/VictimData";
 import VictimForm from "./components/AddData";
 import Tick from "./components/Tick";
 import VisualCharts from "./components/VisualCharts";
 import MapData from "./components/MapData";
+import RecentData from "./components/RecentData";
 
 const activeStyle = {
   fontWeight: "bold",
@@ -96,7 +97,9 @@ function App() {
             <MapData />
           </Route>
           <Route path="/" exact>
+            <Header dividing content="Number of cases in India" size="huge" />
             <Tick />
+            <RecentData />
           </Route>
           <Route path="*">
             <NotFound />

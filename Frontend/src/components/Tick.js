@@ -44,22 +44,22 @@ export default class Tick extends React.Component {
     return (
       <Statistic.Group widths="3">
         <Statistic>
-          <Statistic.Value>{this.state.active}</Statistic.Value>
-          <Statistic.Label>
-            <span style={{ color: A_COLOR }}>Active</span>
-          </Statistic.Label>
+          <Statistic.Value>
+            <span style={{ color: A_COLOR }}>{this.state.active}</span>
+          </Statistic.Value>
+          <Statistic.Label>Active</Statistic.Label>
         </Statistic>
         <Statistic>
-          <Statistic.Value>{this.state.recovered}</Statistic.Value>
-          <Statistic.Label>
-            <span style={{ color: R_COLOR }}>Recovered</span>
-          </Statistic.Label>
+          <Statistic.Value>
+            <span style={{ color: R_COLOR }}>{this.state.recovered}</span>
+          </Statistic.Value>
+          <Statistic.Label>Recovered</Statistic.Label>
         </Statistic>
         <Statistic>
-          <Statistic.Value>{this.state.died}</Statistic.Value>
-          <Statistic.Label>
-            <span style={{ color: D_COLOR }}>Died</span>
-          </Statistic.Label>
+          <Statistic.Value>
+            <span style={{ color: D_COLOR }}>{this.state.died}</span>
+          </Statistic.Value>
+          <Statistic.Label>Died</Statistic.Label>
         </Statistic>
       </Statistic.Group>
     );
