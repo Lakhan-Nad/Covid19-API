@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 
 // Common Error Handler
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.error(err);
   res.status(err.status || 500);
   res.json(err);
 });

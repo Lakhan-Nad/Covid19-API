@@ -17,5 +17,5 @@ export function localDateTimeString(date) {
   m = (m + "").padStart(2, "0");
   d = (d + "").padStart(2, "0");
 
-  return d + "/" + m + "/" + y + "," + date.toLocaleTimeString();
+  return d + "/" + m + "/" + y + ", " + date.toLocaleTimeString();
 }

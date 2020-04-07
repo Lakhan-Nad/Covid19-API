@@ -172,7 +172,7 @@ Router.get("/", async (req, res, next) => {
     };
     for (let i = 0; i < data.length; i++) {
       result.data.push({
-        updateAt: data[i].updatedAt,
+        updatedAt: data[i].updatedAt,
         _id: String(data[i]._id),
         state: data[i].state,
         status: data[i].status,

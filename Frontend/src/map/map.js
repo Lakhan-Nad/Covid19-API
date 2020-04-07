@@ -30,7 +30,6 @@ const distanceToMouse = (markerPos, mousePos, markerProps) => {
 
 export default class Map extends React.Component {
   constructor(props) {
-    console.log(props);
     super(props);
     this.updateOnChange = this.updateOnChange.bind(this);
     this.onChildClick = this.onChildClick.bind(this);

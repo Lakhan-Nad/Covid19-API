@@ -304,9 +304,6 @@ const Data = [];
 const statusArray = [RECOVERED, ACTIVE, DIED];
 
 for (let i = 0; i < LatLngData.length; i++) {
-  if (LatLngData[i][1] < 70) {
-    console.log(LatLngData[i]);
-  }
   Data.push({
     lat: LatLngData[i][0],
     lng: LatLngData[i][1],

@@ -41,7 +41,6 @@ function DisplayTravel({ data, id }) {
 }
 
 function DisplayData({ victimData }) {
-  console.log(victimData);
   return (
     <Segment textAlign="center">
       <Label
