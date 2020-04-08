@@ -19,6 +19,7 @@ mongoose.connect(
     if (!err) {
       console.log("Connected to db :)");
     } else {
+      console.log(err);
       console.log("Unable to Connect to db ):");
       process.exit(1);
     }
