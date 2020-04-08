@@ -6,7 +6,7 @@ import { reduceClusters, makeGeoJSONFeature } from "./format";
 import Marker from "./marker";
 import { Container } from "semantic-ui-react";
 
-const GOOGLE_API_KEY = "AIzaSyDRV_Ibr7waeScMy2fUPuQrxHlQiYC5ZaM";
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 const INDIA_LAT = 24.193684;
 const INDIA_LOT = 78.96288;
 const RADIUS = 90;

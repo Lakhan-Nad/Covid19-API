@@ -1,7 +1,7 @@
 import Axios from "axios";
 
 const Client = Axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: process.env.REACT_APP_API,
 });
 
 export default Client;
