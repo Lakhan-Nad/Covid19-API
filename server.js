@@ -4,6 +4,6 @@ const app = require("./index");
 
 const server = http.createServer(app);
 
-const port = process.env.port || 8000;
+const port = process.env.PORT || 8080;
 
 server.listen(port);

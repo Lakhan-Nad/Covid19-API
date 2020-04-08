@@ -5,6 +5,11 @@ const cors = require("cors");
 
 const app = express();
 
+app.set("case sensitive routing", true);
+app.set("strict routing", false);
+app.set("trust proxy", true);
+app.set("x-powered-by", false);
+
 app.use(cors());
 
 mongoose.connect(
